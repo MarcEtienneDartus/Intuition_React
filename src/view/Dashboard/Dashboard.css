@@ -1,4 +1,4 @@
-body { 
+/* body { 
     background: url(../../assets/background.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -14,6 +14,22 @@ body {
 .title {
     text-align: center;
 }
-.button {
-    margin-top: 2em;
+.menu {
+    padding: 0 0 0 0;
+    padding-left: 1em;
+    padding-right: 1em;
 }
+.row{
+    padding: 0 0 0 0;
+}
+.button {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5vh;
+}
+.tab{
+    height: 0.5em;
+}
+.tabs{
+    height: 1em;
+} */

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Table,TableBody,TableCell,TablePagination,TableRow,Paper,Checkbox} from '@material-ui/core';
+import {Table,TableBody,TableCell,TablePagination,TableRow,Checkbox} from '@material-ui/core';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 
@@ -94,13 +94,13 @@ class EnhancedTable extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
   
     render() {
-      const { classes, rows, SeeData } = this.props;
+      const { classes, rows, SeeData, type } = this.props;
       const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
       const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
   
       return (
-        <Paper className={classes.root}>
-          <EnhancedTableToolbar numSelected={selected.length} selected={selected} SeeData={SeeData}/>
+        <div>
+          <EnhancedTableToolbar numSelected={selected.length} selected={selected} SeeData={SeeData} type={type}/>
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
               <EnhancedTableHead
@@ -116,27 +116,26 @@ class EnhancedTable extends React.Component {
                 {stableSort(data, getSorting(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(n => {
-                    const isSelected = this.isSelected(n.SocieteId);
+                    const object = Object.keys(n)
+                    const isSelected = this.isSelected(n[object[0]]);
                     return (
                       <TableRow
                         hover
-                        onClick={event => this.handleClick(event, n.SocieteId)}
+                        onClick={event => this.handleClick(event,n[object[0]])}
                         role="checkbox"
                         aria-checked={isSelected}
                         tabIndex={-1}
-                        key={n.SocieteId}
+                        key={n[object[0]]}
                         selected={isSelected}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox checked={isSelected} />
                         </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          {n.NomSociete}
-                        </TableCell>
-                        <TableCell align="right">{n.CA}</TableCell>
-                        <TableCell align="right">{n.Ebitda}</TableCell>
-                        <TableCell align="right">{n.Intermediaire}</TableCell>
-                        <TableCell align="right">{n.Localisation}</TableCell>
+                        <TableCell component="th" scope="row" padding="none">{n[object[1]]}</TableCell>
+                        <TableCell align="center">{n[object[2]]}</TableCell>
+                        <TableCell align="left">{n[object[3]]}</TableCell>
+                        <TableCell align="left">{n[object[4]]}</TableCell>
+                        <TableCell align="left">{n[object[5]]}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -163,7 +162,7 @@ class EnhancedTable extends React.Component {
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
-        </Paper>
+        </div>
       );
     }
   }

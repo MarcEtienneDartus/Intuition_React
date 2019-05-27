@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Container,Row,Col} from 'react-bootstrap';
 import Cookies from 'universal-cookie';
-import {Paper,Button} from '@material-ui/core';
+import {Paper,Button,FormControl,InputLabel,Input,Tabs,Tab,Divider} from '@material-ui/core';
 import AuthController from '../../component/AuthController/AuthController';
 import EnhancedTable from '../../component/EnhancedTable/EnhancedTable';
 import { withRouter } from 'react-router-dom';
@@ -9,13 +9,21 @@ import List from '../../component/List/List';
 
 import './Dashboard.css';
 
-const rows = [
-    { id: 'NomSociete', numeric: false, disablePadding: true, label: 'Nom de la Société' },
-    { id: 'CA', numeric: false, disablePadding: false, label: 'CA M€' },
-    { id: 'Ebitda', numeric: false, disablePadding: false, label: 'Ebitda' },
+const rowsDealsChauds = [
+    { id: 'NomSociete', numeric: false, disablePadding: true, label: 'Société' },
+    { id: 'CA', numeric: false, disablePadding: false, label: 'CA(M€)' },
+    { id: 'Activite', numeric: false, disablePadding: false, label: 'Activité' },
+    { id: 'Actionnaire', numeric: false, disablePadding: false, label: 'Actionnaire' },
     { id: 'Intermediaire', numeric: false, disablePadding: false, label: 'Intermédiaire' },
-    { id: 'Localisation', numeric: false, disablePadding: false, label: 'Localisation' },
   ];
+
+const rowsMillesimes = [
+    { id: 'NomParticipation', numeric: false, disablePadding: true, label: 'Nom de Participation' },
+    { id: 'CA', numeric: false, disablePadding: false, label: 'CA(M€)' },
+    { id: 'Description ', numeric: false, disablePadding: false, label: 'Description ' },
+    { id: 'MaisonGestion', numeric: false, disablePadding: false, label: 'Maison de gestion' },
+    { id: 'TypePosition', numeric: false, disablePadding: false, label: 'Type de position' },
+];
 
 class Dashboard extends Component {
     constructor(props){
@@ -24,22 +32,21 @@ class Dashboard extends Component {
         const cookies = new Cookies();
         this.token = cookies.get('token')
         this.state = {
-            data:[],
+            dataDealsChauds:[],
+            dataMillesimes:[],
             listSecteur:[],
-            listLocalisation:[],
-            listAnnee:[],
+            tabValue:0,
         }
         this.secteur=null
-        this.annee=null
-        this.localisation=null
+        this.activite = null
     }
 
     componentDidMount(){
         if(this.token!== undefined) {
-            this.GetData(this.secteur,this.annee,this.localisation)
+            this.GetData(this.secteur,this.activite,'deal')
+            this.GetData(this.secteur,this.activite,'milessime')
+            
             this.GetListData('listSecteur','Secteur')
-            this.GetListData('listLocalisation','Localisation')
-            this.GetListData('listAnnee','DateSaisie')
         }
     }
 
@@ -52,8 +59,8 @@ class Dashboard extends Component {
         return list
     }
 
-    GetData = (secteur,annee,localisation) => {
-        const url = process.env.REACT_APP_API_URL+'api/data';
+    GetData = (secteur,activite,type) => {
+        const url = process.env.REACT_APP_API_URL+'api/data/'+type;
             let fetchData = {
                 method: 'POST',
                 headers:{
@@ -63,15 +70,15 @@ class Dashboard extends Component {
                 },
                 body: JSON.stringify({
                     secteur:secteur,
-                    annee:annee === null ? annee : '%'+annee.substring(6),
-                    localisation:localisation,
+                    activite:activite === null || activite === '' ?null:'%'+activite+'%',
                 })
             }
             fetch(url, fetchData)
             .then( async (resp) => {
                 if (resp.ok) {
                     const jsonData = await resp.json();
-                    this.setState({data:jsonData})
+                    if(type === 'deal') this.setState({dataDealsChauds:jsonData})
+                    else this.setState({dataMillesimes:jsonData})
                 } else {
                     console.error('server response : ' + resp.status);
                 }
@@ -79,7 +86,7 @@ class Dashboard extends Component {
     }
 
     GetListData = (stateName,dataName) => {
-        const url = process.env.REACT_APP_API_URL+'api/data/distinct/'+dataName;
+        const url = process.env.REACT_APP_API_URL+'api/data/header/distinct/'+dataName;
             let fetchData = {
                 method: 'GET',
                 headers:{'x-access-token':this.token}
@@ -88,6 +95,7 @@ class Dashboard extends Component {
             .then( async (resp) => {
                 if (resp.ok) {
                     const jsonData = await resp.json();
+                    console.log(jsonData)
                     let newArray = this.StandardArray(jsonData)
                     this.setState({[stateName]:newArray})
                 } else {
@@ -97,42 +105,57 @@ class Dashboard extends Component {
     }
 
     ChangeSecteur = (value) =>{this.secteur = value}
-    ChangeAnnee = (value) =>{this.annee = value}
-    ChangeLocalisation = (value) =>{this.localisation = value}
 
-    SeeData = (arrayIndex) => {
-        this.props.history.push('/data',{listSocieteId:arrayIndex})
+    SeeData = (arrayIndex,type) => {
+        this.props.history.push('/data',{listSocieteId:arrayIndex,type:type})
     }
 
     onSearchHandler = () => {
-        this.GetData(this.secteur,this.annee,this.localisation)
+        this.GetData(this.secteur,this.activite,'deal')
+        this.GetData(this.secteur,this.activite,'millesime')
     }
 
+    handleTabChange = (event, value) => {
+        console.log(value)
+        this.setState({ tabValue : value });
+      };
+
     render() {
-        let { data, listSecteur, listAnnee, listLocalisation } = this.state
+        let { dataDealsChauds, dataMillesimes, listSecteur, tabValue } = this.state
         return (
             <Container>
-                <Paper>
+                <Paper className='menu'>
                     <Row>
-                        <Col xs={12} sm={6} md={3}>
-                            <List listName='Secteur' list={listSecteur} changeHandler={this.ChangeSecteur}/>
+                        <Col xs={12} sm={6} md={5} lg={{span:4,offset:1}}>          
+                            <FormControl margin="normal" fullWidth>
+                                <List listName='Secteur' list={listSecteur} changeHandler={this.ChangeSecteur}/>
+                            </FormControl>
                         </Col>
-                        <Col xs={12} sm={6} md={3}>
-                            <List listName='Année' list={listAnnee} changeHandler={this.ChangeAnnee}/>
+                        <Col xs={12} sm={6} md={5} lg={4}>                            
+                            <FormControl margin="normal" fullWidth>
+                                <InputLabel htmlFor="activite">Recherche par mot clef</InputLabel>
+                                <Input id="activite" name="activite" onChange={text => {this.activite=text.target.value}}/>
+                            </FormControl>
                         </Col>
-                        <Col xs={12} sm={6} md={3}>
-                            <List listName='Localisation' list={listLocalisation} changeHandler={this.ChangeLocalisation}/>
-                        </Col>
-                        <Col xs={12} sm={6} md={3}>      
-                            <Button variant="contained" color="primary" onClick={this.onSearchHandler}>
-                                Recherche
-                            </Button>
+                        <Col xs={12} sm={12} md={2} lg={2}> 
+                            <div className='button'>
+                                <Button variant="contained" color="primary" onClick={this.onSearchHandler}>Recherche</Button>
+                            </div>          
                         </Col>
                     </Row>
                 </Paper>
                 <Row>
                     <Col xs={12}>
-                        <EnhancedTable rows={rows} data={data} SeeData={this.SeeData}/>
+                        <Paper>
+
+                            <Tabs value={tabValue} onChange={this.handleTabChange} centered>
+                                <Tab label="Deals Chauds" />
+                                <Tab label="Millésimes" />
+                            </Tabs>
+                            <Divider light/>
+                            {tabValue === 0 && <EnhancedTable rows={rowsDealsChauds} data={dataDealsChauds} SeeData={this.SeeData} type={'dealsChauds'}/>}
+                            {tabValue === 1 && <EnhancedTable rows={rowsMillesimes} data={dataMillesimes} SeeData={this.SeeData} type={'millesimes'}/>}
+                        </Paper>
                     </Col>
                 </Row>
             </Container>

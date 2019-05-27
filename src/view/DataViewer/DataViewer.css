@@ -1,0 +1,11 @@
+.paper{
+    padding: 1em;
+    margin-bottom: 2em;
+}
+.title{
+    display: flex;
+    align-items: center;
+}
+div{
+    padding: 0.5em;
+}

@@ -58,14 +58,14 @@ export default class SignIn extends Component {
                                 <Input name="password" type="password" id="password" autoComplete="current-password" onChange={text => {this.password=text.target.value}} />
                             </FormControl>
                             <div className='button'>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                onClick={this.handleConnection}
-                            >
-                                Connexion
-                            </Button>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={this.handleConnection}
+                                >
+                                    Connexion
+                                </Button>
                             </div>
                         </Paper>
                     </Col>

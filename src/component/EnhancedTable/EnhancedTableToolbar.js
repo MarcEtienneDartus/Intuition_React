@@ -19,7 +19,7 @@ class EnhancedTableToolbar extends React.Component {
   }
 
   render() {
-    const { numSelected, classes, SeeData } = this.props;
+    const { numSelected, classes, SeeData, type} = this.props;
   
     return (
       <Toolbar
@@ -30,18 +30,18 @@ class EnhancedTableToolbar extends React.Component {
         <div className={classes.title}>
           {numSelected > 0 ? (
             <Typography color="inherit" variant="subtitle1">
-              {numSelected} deal sélectionné{numSelected>1?'s':null}
+              {numSelected} {type=== 'dealsChauds' ?'deal':'millésimes'} sélectionné{numSelected>1?'s':null}
             </Typography>
           ) : (
             <Typography variant="h6" id="tableTitle">
-              Deals Chauds
+              {type=== 'dealsChauds' ?'Deals Chauds':'Base Millésimes'} 
             </Typography>
           )}
         </div>
         <div className={classes.spacer} />
         <div className={classes.actions}>
           {numSelected > 0 ? 
-            <Tooltip title="Voir" onClick={()=>SeeData(this.selected)}>
+            <Tooltip title="Voir" onClick={()=>SeeData(this.selected,type)}>
               <IconButton aria-label="Voir">
                 <MdArrowForward/>
               </IconButton>
