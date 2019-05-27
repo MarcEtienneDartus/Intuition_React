@@ -1,35 +1,37 @@
-/* body { 
+body { 
     background: url(../../assets/background.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
-.paper {
+.Dashboard .paper {
     display: 'flex';
     flex-direction: 'column';
     align-items: 'center';
     padding: 1em;
 }
-.title {
+.Dashboard .title {
     text-align: center;
 }
-.menu {
+.Dashboard .menu {
     padding: 0 0 0 0;
     padding-left: 1em;
     padding-right: 1em;
+    margin-bottom: 2em;
+    margin-top: 1em;
 }
-.row{
+.Dashboard .row{
     padding: 0 0 0 0;
 }
-.button {
+.Dashboard .button {
     display: flex;
     justify-content: center;
     margin-top: 2.5vh;
 }
-.tab{
+.Dashboard .tab{
     height: 0.5em;
 }
-.tabs{
+.Dashboard .tabs{
     height: 1em;
-} */
+}

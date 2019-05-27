@@ -53,7 +53,7 @@ class DataViewer extends Component {
 
     render() {
         return (
-            <Container>
+            <Container className="DataViewer">
                 {this.state.listSociete.map((Societe)=>{
                     return(this.type === 'deal' ?             
                     <Paper className='paper'>

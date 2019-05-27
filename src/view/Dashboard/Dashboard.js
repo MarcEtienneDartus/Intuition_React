@@ -123,7 +123,7 @@ class Dashboard extends Component {
     render() {
         let { dataDealsChauds, dataMillesimes, listSecteur, tabValue } = this.state
         return (
-            <Container>
+            <Container className="Dashboard">
                 <Paper className='menu'>
                     <Row>
                         <Col xs={12} sm={6} md={5} lg={{span:4,offset:1}}>          

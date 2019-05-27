@@ -1,11 +1,12 @@
-.paper{
+.DataViewer .paper{
     padding: 1em;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+    margin-top:1em;
 }
-.title{
+.DataViewer .title{
     display: flex;
     align-items: center;
 }
-div{
+.DataViewer div{
     padding: 0.5em;
 }
