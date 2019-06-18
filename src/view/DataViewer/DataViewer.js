@@ -132,7 +132,7 @@ class DataViewer extends Component {
                                 {Societe.DernierInvestissement && <Typography align='left' variant='h7'><b>Dernier investissement:</b> {Societe.DernierInvestissement}</Typography>}
                                 {Societe.TypePosition && <Typography align='left' variant='h7'><b>Type de position:</b> {Societe.TypePosition}</Typography>}
                                 {Societe.VehiculeAssocie && <Typography align='left' variant='h7'><b>Vehicule associé:</b> {Societe.VehiculeAssocie}</Typography>}
-                                {Societe.AppetanceBuildUp && <Typography align='left' variant='h7'><b>Appetance build_up:</b> {Societe.AppetanceBuildUp}</Typography>}
+                                {Societe.AppetenceBuildUp && <Typography align='left' variant='h7'><b>Appetence build_up:</b> {Societe.AppetenceBuildUp}</Typography>}
                             </Col>
                         </Row>
                     </Paper>
