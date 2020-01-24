@@ -161,6 +161,7 @@ class EnhancedTable extends React.Component {
             }}
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            labelRowsPerPage={""}
           />
         </div>
       );

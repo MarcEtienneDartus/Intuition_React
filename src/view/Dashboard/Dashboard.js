@@ -11,7 +11,7 @@ import './Dashboard.css';
 
 const rowsDealsChauds = [
     { id: 'NomSociete', numeric: false, disablePadding: true, label: 'Société' },
-    { id: 'CA', numeric: false, disablePadding: false, label: 'CA(M€)' },
+    { id: 'Date', numeric: false, disablePadding: false, label: 'Date' },
     { id: 'Activite', numeric: false, disablePadding: false, label: 'Activité' },
     { id: 'Actionnaire', numeric: false, disablePadding: false, label: 'Actionnaire' },
     { id: 'Intermediaire', numeric: false, disablePadding: false, label: 'Intermédiaire' },
@@ -19,7 +19,7 @@ const rowsDealsChauds = [
 
 const rowsMillesimes = [
     { id: 'NomParticipation', numeric: false, disablePadding: true, label: 'Nom de Participation' },
-    { id: 'CA', numeric: false, disablePadding: false, label: 'CA(M€)' },
+    { id: 'Date', numeric: false, disablePadding: false, label: 'Date' },
     { id: 'Description ', numeric: false, disablePadding: false, label: 'Description ' },
     { id: 'MaisonGestion', numeric: false, disablePadding: false, label: 'Maison de gestion' },
     { id: 'TypePosition', numeric: false, disablePadding: false, label: 'Type de position' },
@@ -39,12 +39,13 @@ class Dashboard extends Component {
         }
         this.secteur=null
         this.activite = null
+        this.annee = null
     }
 
     componentDidMount(){
         if(this.token!== undefined) {
-            this.GetData(this.secteur,this.activite,'deal')
-            this.GetData(this.secteur,this.activite,'milessime')
+            this.GetData(this.secteur,this.activite,this.annee,'deal')
+            this.GetData(this.secteur,this.activite,this.annee,'milessime')
             
             this.GetListData('listSecteur','Secteur')
         }
@@ -59,7 +60,7 @@ class Dashboard extends Component {
         return list
     }
 
-    GetData = (secteur,activite,type) => {
+    GetData = (secteur,activite,annee,type) => {
         const url = process.env.REACT_APP_API_URL+'api/data/'+type;
             let fetchData = {
                 method: 'POST',
@@ -71,6 +72,7 @@ class Dashboard extends Component {
                 body: JSON.stringify({
                     secteur:secteur,
                     activite:activite === null || activite === '' ?null:'%'+activite+'%',
+                    annee:annee === null || annee === '' ?null:'%'+annee,
                 })
             }
             fetch(url, fetchData)
@@ -111,8 +113,8 @@ class Dashboard extends Component {
     }
 
     onSearchHandler = () => {
-        this.GetData(this.secteur,this.activite,'deal')
-        this.GetData(this.secteur,this.activite,'millesime')
+        this.GetData(this.secteur,this.activite,this.annee,'deal')
+        this.GetData(this.secteur,this.activite,this.annee,'millesime')
     }
 
     handleTabChange = (event, value) => {
@@ -126,18 +128,24 @@ class Dashboard extends Component {
             <Container className="Dashboard">
                 <Paper className='menu'>
                     <Row>
-                        <Col xs={12} sm={6} md={5} lg={{span:4,offset:1}}>          
+                        <Col xs={12} sm={12} md={4}>          
                             <FormControl margin="normal" fullWidth>
                                 <List listName='Secteur' list={listSecteur} changeHandler={this.ChangeSecteur}/>
                             </FormControl>
                         </Col>
-                        <Col xs={12} sm={6} md={5} lg={4}>                            
+                        <Col xs={12} sm={2} md={2}>                            
+                            <FormControl margin="normal" fullWidth>
+                                <InputLabel htmlFor="annee">Année</InputLabel>
+                                <Input id="annee" name="annee" onChange={text => {this.annee=text.target.value}}/>
+                            </FormControl>
+                        </Col>
+                        <Col xs={12} sm={10} md={4}>                            
                             <FormControl margin="normal" fullWidth>
                                 <InputLabel htmlFor="activite">Recherche par mot clef</InputLabel>
                                 <Input id="activite" name="activite" onChange={text => {this.activite=text.target.value}}/>
                             </FormControl>
                         </Col>
-                        <Col xs={12} sm={12} md={2} lg={2}> 
+                        <Col xs={12} sm={12} md={2}> 
                             <div className='button'>
                                 <Button variant="contained" color="primary" onClick={this.onSearchHandler}>Recherche</Button>
                             </div>          

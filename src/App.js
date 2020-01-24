@@ -5,6 +5,7 @@ import Dashboard from './view/Dashboard/Dashboard';
 import Default from './view/Default/Default';
 import DataViewer from './view/DataViewer/DataViewer'
 import './App.css';
+
 class App extends Component {
 
   render() {

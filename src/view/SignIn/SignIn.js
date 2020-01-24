@@ -25,8 +25,10 @@ export default class SignIn extends Component {
         fetch(url, fetchData)
         .then( async (resp) => {
             const cookies = new Cookies();
-            console.log(resp)
-            if (resp.ok) {
+            if(resp.status===404) alert("Utilisateur inconnu")
+            else if(resp.status===500) alert("Erreur serveur")
+            else if(resp.status===401) alert("Mot de passe invalide")
+            else if (resp.ok) {
                 const jsonData = await resp.json();
                 console.log(jsonData)
                 let now = new Date()
@@ -34,10 +36,10 @@ export default class SignIn extends Component {
                 cookies.set('auth', jsonData.auth, { path: '/', expires: time});
                 cookies.set('token', jsonData.token, { path: '/', expires: time });
                 this.props.history.push('/dashboard')
-            } else {
+            } else alert('Connexion impossible')
+            if(!resp.ok){
                 cookies.remove('auth');
                 cookies.remove('token');
-                console.error('server response : ' + resp.status);
             }
         });
     }

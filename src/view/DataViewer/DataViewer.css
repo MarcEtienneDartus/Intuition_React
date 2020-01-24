@@ -6,6 +6,7 @@
 .DataViewer .title{
     display: flex;
     align-items: center;
+    margin-left: 1em;
 }
 .DataViewer div{
     padding: 0.5em;
